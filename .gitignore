@@ -1,0 +1,23 @@
+# Rust-specific ignores
+/webapp_backend/target/
+/webapp_backend/**/*.rs.bk
+
+# Node.js-specific ignores
+/webapp_spa/node_modules/
+/webapp_spa/dist/
+/webapp_spa/build/
+/webapp_spa/logs/
+/webapp_spa/*.log
+/webapp_spa/npm-debug.log*
+
+# Environment variables
+**/.env
+
+# IDE and editor specific
+/.idea/
+*.sublime-workspace
+.vscode/
+*.iml
+
+# Operating system specific
+.DS_Store

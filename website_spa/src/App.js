@@ -5,7 +5,7 @@ import Home from './Home';
 import About from './About';
 import Chat from './Chat';
 import ImageGen from './ImageGen';
-
+import Register from './Register'; // Add this line to import the Register component
 function App() {
   return (
     <Router>
@@ -16,6 +16,7 @@ function App() {
             <li><Link to="/about">About</Link></li>
             <li><Link to="/chat">Chat</Link></li>
             <li><Link to="/imagegen">Image Gen</Link></li>
+            <li><Link to="/register">Register</Link></li> {/* Add this line */}
           </ul>
         </nav>
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/imagegen" element={<ImageGen />} />
+          <Route path="/register" element={<Register />} /> {/* Add this line */}
         </Routes>
       </div>
     </Router>

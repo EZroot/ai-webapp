@@ -2,12 +2,13 @@ mod models;
 mod handlers;
 mod services;
 mod utils;
+mod schema;
 
 use actix_cors::Cors;
 use actix_files as fs;
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 
-use handlers::{chat, greeting, image_gen};
+use handlers::{chat, greeting, image_gen, delete, register};
 
 // Placeholder for the about handler, adapt as needed
 async fn about() -> impl Responder {
@@ -31,6 +32,9 @@ async fn main() -> std::io::Result<()> {
                     .route("/greet", web::get().to(greeting::greet))
                     .route("/chat", web::post().to(chat::chat))
                     .route("/imagegen", web::post().to(image_gen::generate)) 
+                    .route("/register", web::post().to(register::register_user))
+                    .route("/delete", web::post().to(delete::delete_user))
+
                 )
             .service(fs::Files::new("/", "../website_spa/build").index_file("index.html"))
             // Placeholder services for demonstration; adapt as needed

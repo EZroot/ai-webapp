@@ -9,7 +9,7 @@ pub async fn chat(body: web::Json<ChatRequest>) -> impl Responder {
     //     Ok(key) => key,
     //     Err(_) => return HttpResponse::InternalServerError().body("API key not configured."),
     // };
-    let api_key = "setkey".to_string();
+    let api_key = "abc".to_string();
 
     let mut gpt_client = Gpt::new();
     gpt_client.set_api_key(&api_key);

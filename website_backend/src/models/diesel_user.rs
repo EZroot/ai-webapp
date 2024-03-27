@@ -11,7 +11,7 @@ pub struct User {
     pub username: String,
     pub password_hash: String,
     pub email: String,
-    pub role: String,
+    pub role: Option<String>, // Adjusted to match the schema's Nullable<Varchar>
 }
 
 #[derive(Insertable, Serialize, Deserialize)]
@@ -23,3 +23,8 @@ pub struct NewUser {
     pub role: String,
 }
 
+#[derive(Deserialize)]
+pub struct LoginRequest {
+    pub username: String,
+    pub password: String,
+}

@@ -8,7 +8,7 @@ use actix_cors::Cors;
 use actix_files as fs;
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 
-use handlers::{chat, greeting, image_gen, delete, register};
+use handlers::{chat, delete, greeting, image_gen, login, register};
 
 // Placeholder for the about handler, adapt as needed
 async fn about() -> impl Responder {
@@ -34,6 +34,7 @@ async fn main() -> std::io::Result<()> {
                     .route("/imagegen", web::post().to(image_gen::generate)) 
                     .route("/register", web::post().to(register::register_user))
                     .route("/delete", web::post().to(delete::delete_user))
+                    .route("/login", web::post().to(login::login_handler))
 
                 )
             .service(fs::Files::new("/", "../website_spa/build").index_file("index.html"))

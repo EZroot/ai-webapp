@@ -1,36 +1,39 @@
-/* Navigation styles */
+/* General styling for the navigation bar */
+nav {
+  background-color: #343a40; /* Dark background for contrast */
+  padding: 10px; /* Padding around the navigation */
+}
+
 nav ul {
-  list-style-type: none;
+  list-style: none; /* Remove default list styling */
   padding: 0;
+  margin: 0;
+  display: flex; /* Layout items in a row */
+  justify-content: center; /* Center items horizontally */
 }
 
 nav ul li {
-  display: inline;
-  margin-right: 10px;
+  margin: 0 15px; /* Space between each link */
 }
 
-/* Input and Button styles */
-input[type="text"] {
-  padding: 8px;
-  margin-right: 4px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+nav ul li a {
+  text-decoration: none; /* Remove underline from links */
+  color: #ffffff; /* Light text color for contrast */
+  font-size: 16px; /* Slightly larger font size for readability */
+  padding: 10px 15px; /* Padding for larger click area and visual appeal */
+  border-radius: 5px; /* Rounded corners for the links */
+  transition: background-color 0.3s; /* Smooth background transition on hover */
 }
 
-button {
-  background-color: #4CAF50; /* Green */
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+/* Hover effect for links */
+nav ul li a:hover, nav ul li a:focus {
+  background-color: #007bff; /* Highlight color on hover/focus */
+  color: #ffffff; /* Keep text color consistent */
 }
 
-button:hover {
-  background-color: #45a049;
-}
-
-/* Message display */
-p {
-  color: #333;
+/* Active link styling */
+nav ul li a.active {
+  background-color: #0056b3; /* Darker shade for the active link */
+  color: #ffffff;
+  border: 1px solid #004085; /* Optional: add a border to the active link */
 }

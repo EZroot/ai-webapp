@@ -1,12 +1,24 @@
 use actix_web::{web, HttpResponse, Responder};
+use crate::services::gpt::{Gpt, GptError};
+use crate::models::chat_message::{ChatRequest, ChatMessage};
+use std::env;
 
-use crate::models::image_gen::{ImageGenRequest, ImageGenResponse};
+pub async fn generate(body: web::Json<ChatRequest>) -> impl Responder {
+    println!("Setting API key");
+    // let api_key = match env::var("OPENAI_API_KEY") {
+    //     Ok(key) => key,
+    //     Err(_) => return HttpResponse::InternalServerError().body("API key not configured."),
+    // };
+    let api_key = "setkey".to_string();
 
-// Placeholder function for generating an image
-pub async fn generate_image(body: web::Json<ImageGenRequest>) -> impl Responder {
-    println!("ImageGen endpoint hit with input: {}", body.input);
-    // Here you would integrate with an actual image generation library or service
-    let image_url = format!("https://example.com/generated_images/{}.png", body.input); // Placeholder URL
+    let mut gpt_client = Gpt::new();
+    gpt_client.set_api_key(&api_key);
 
-    HttpResponse::Ok().json(ImageGenResponse { image_url })
+    match gpt_client.generate_image(&body.message).await {
+        Ok(response_message) => HttpResponse::Ok().json(ChatMessage { message: response_message }),
+        Err(GptError::Unauthorized) => HttpResponse::Unauthorized().body("Unauthorized request."),
+        Err(GptError::NoApiKey) => HttpResponse::InternalServerError().body("API key not configured."),
+        Err(GptError::RequestError(err)) => HttpResponse::BadRequest().body("Bad request to GPT."),
+        Err(GptError::ResponseError(msg)) => HttpResponse::InternalServerError().body(format!("Error from GPT: {}", msg)),
+    }
 }

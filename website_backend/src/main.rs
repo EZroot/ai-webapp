@@ -3,11 +3,9 @@ mod handlers;
 mod services;
 mod utils;
 
-use std::collections::HashMap;
 use actix_cors::Cors;
 use actix_files as fs;
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
-use serde::{Deserialize, Serialize};
 
 use handlers::{chat, greeting, image_gen};
 
@@ -32,7 +30,7 @@ async fn main() -> std::io::Result<()> {
                 web::scope("/api")
                     .route("/greet", web::get().to(greeting::greet))
                     .route("/chat", web::post().to(chat::chat))
-                    .route("/image-gen", web::post().to(image_gen::generate_image)) 
+                    .route("/imagegen", web::post().to(image_gen::generate)) 
                 )
             .service(fs::Files::new("/", "../website_spa/build").index_file("index.html"))
             // Placeholder services for demonstration; adapt as needed

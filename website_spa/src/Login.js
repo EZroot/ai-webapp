@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { useAuth } from './AuthProvider'; // Import useAuth hook
 import './Login.css'; // Adjust the path as necessary
+import DOMPurify from 'dompurify';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -13,8 +14,13 @@ function Login() {
   const { setUser } = useAuth(); // Use setUser function from AuthProvider
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    const { name, value } = e.target;
+
+    // Sanitize user input to prevent XSS
+    const sanitizedValue = DOMPurify.sanitize(value);
+  
+    setFormData({ ...formData, [name]: sanitizedValue });
+    };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -21,6 +21,7 @@ pub struct NewUser {
     pub password_hash: String,
     pub email: String,
     pub role: String,
+
 }
 
 #[derive(Deserialize)]

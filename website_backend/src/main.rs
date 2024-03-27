@@ -3,6 +3,7 @@ mod handlers;
 mod services;
 mod utils;
 mod schema;
+mod middleware;
 
 use actix_cors::Cors;
 use actix_files as fs;
@@ -27,6 +28,7 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .wrap(cors)
+            .wrap(middleware::request_logger::RequestLogger)
             .service(
                 web::scope("/api")
                     .route("/greet", web::get().to(greeting::greet))

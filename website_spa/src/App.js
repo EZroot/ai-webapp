@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import './App.css';
 import Home from './Home';
@@ -10,13 +10,29 @@ import Login from './Login';
 import { useAuth } from './AuthProvider'; // Import useAuth hook
 
 function App() {
-  const { user } = useAuth(); // Use the user state
+  const { user, setUser } = useAuth(); // Use the user state
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
+    if (token && username) {
+      setUser({ username }); // Set the user state if token and username are available
+    }
+    setIsLoading(false); // Set loading state to false after authentication check
+  }, [setUser]);
 
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
+    setUser(null); // Set user state to null on logout
     window.location.href = '/login'; // Redirect to login after logout
   };
+
+  if (isLoading) {
+    // Return a loading indicator while authentication check is in progress
+    return <div>Loading...</div>;
+  }
 
   return (
     <Router>
@@ -24,12 +40,18 @@ function App() {
         <nav>
           <ul>
             <li><Link to="/">Home</Link></li>
-            {/* <li><Link to="/about">About</Link></li> */}
-            {user && <><li><Link to="/chat">Chat</Link></li>
-            <li><Link to="/imagegen">Image Gen</Link></li></>}
-            {!user && <><li><Link to="/register">Register</Link></li>
-            <li><Link to="/login">Login</Link></li></>}
-            {user &&               <li><button className="logout-btn" onClick={logout}>Logout</button></li>}
+            {user ? (
+              <>
+                <li><Link to="/chat">Chat</Link></li>
+                <li><Link to="/imagegen">Image Gen</Link></li>
+                <li><button className="logout-btn" onClick={logout}>Logout</button></li>
+              </>
+            ) : (
+              <>
+                <li><Link to="/register">Register</Link></li>
+                <li><Link to="/login">Login</Link></li>
+              </>
+            )}
           </ul>
         </nav>
 
@@ -38,14 +60,12 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          {/* Conditionally render protected routes */}
-          {user && (
+          {user ? (
             <>
               <Route path="/chat" element={<Chat />} />
               <Route path="/imagegen" element={<ImageGen />} />
             </>
-          )}
-          {!user && (
+          ) : (
             <>
               <Route path="/chat" element={<Navigate to="/login" replace />} />
               <Route path="/imagegen" element={<Navigate to="/login" replace />} />

@@ -1,22 +1,59 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection after login
+import { useAuth } from './AuthProvider'; // Import useAuth hook
 import './Login.css'; // Adjust the path as necessary
+import DOMPurify from 'dompurify';
 
 function Register() {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password_hash: '',
-    role: '', // Add this line if you want users to specify their role
+    role: '',
   });
-  
+
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const navigate = useNavigate();
+  const { setUser } = useAuth(); // Use setUser function from AuthProvider
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // Sanitize user input to prevent XSS
+    const sanitizedValue = DOMPurify.sanitize(value);
+  
+    setFormData({ ...formData, [name]: sanitizedValue });
+    };
+
+  const autoLogin = async () => {
+    try {
+      const loginResponse = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: formData.username, password: formData.password_hash }),
+      });
+
+      if (!loginResponse.ok) {
+        throw new Error('Auto-login failed');
+      }
+
+      const data = await loginResponse.json();
+      console.log('Auto-logged in successfully:', data);
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('username', formData.username);
+
+      setUser(formData.username); // Update authentication state
+
+      navigate('/'); // Navigate to the home page or dashboard
+    } catch (error) {
+      console.error('Auto-login error:', error);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Construct a new object for the request, renaming `password` to `password_hash`
     const requestData = {
       username: formData.username,
       email: formData.email,
@@ -31,19 +68,22 @@ function Register() {
         },
         body: JSON.stringify(requestData),
       });
-      console.log(requestData);
       if (!response.ok) throw new Error('Failed to register');
-      // Handle success, e.g., navigate to login or show a success message
-      console.log('Registered successfully');
+
+      setRegistrationSuccess(true); // Indicate registration success
+      setTimeout(autoLogin, 3000);
     } catch (error) {
       console.error('Registration error:', error);
-      // Handle errors, e.g., show an error message
     }
   };
-  
 
   return (
     <div className="login-container" id="loginContainer">
+      {registrationSuccess && (
+        <div className="success-message">
+          Registration successful! Redirecting...
+        </div>
+      )}
       <form id="loginForm" onSubmit={handleSubmit}>
         <h2>Register</h2>
         <label>

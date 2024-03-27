@@ -1,0 +1,70 @@
+/* Login.css updated with unique identifiers */
+#loginContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Use viewport height to fill the screen */
+    background-color: #f4f7f6;
+  }
+  
+  #loginForm {
+    background: #ffffff;
+    max-width: 400px;
+    margin: 20px;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  #loginForm h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  #loginForm label {
+    display: block;
+    margin: 10px 0;
+  }
+  
+  #loginForm input[type="text"],
+  #loginForm input[type="email"],
+  #loginForm input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding and border in element's width and height */
+  }
+  
+  #loginForm input[type="text"]:focus,
+  #loginForm input[type="password"]:focus {
+    border-color: #5ab9ea;
+    outline: none; /* Removes the default focus outline */
+  }
+  
+  #loginForm button[type="submit"] {
+    width: 100%;
+    background-color: #5ab9ea;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  #loginForm button[type="submit"]:hover {
+    background-color: #4691c0;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 420px) {
+    #loginForm {
+      width: 90%;
+      padding: 20px;
+    }
+  }
+  

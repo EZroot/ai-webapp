@@ -1,27 +1,15 @@
-use actix_web::{web, HttpResponse, Responder, HttpRequest};
+use actix_web::{web, HttpResponse, Responder};
 use crate::services::gpt::{Gpt, GptError};
 use crate::models::chat_message::{ChatRequest, ChatMessage};
 use std::env;
-use crate::services::webtoken;
 
-pub async fn generate(req: HttpRequest, body: web::Json<ChatRequest>) -> impl Responder {
-    // Attempt to extract the token from the Authorization header
-    let token = req.headers().get("Authorization")
-        .and_then(|header| header.to_str().ok())
-        .and_then(|header| header.strip_prefix("Bearer "))
-        .map(|token| token.to_string());
-
-    // Validate the token
-    let claims = match token {
-        Some(token) => match webtoken::validate_token(&token) {
-            Ok(claims) => claims,
-            Err(_) => return HttpResponse::Unauthorized().finish(),
-        },
-        None => return HttpResponse::Unauthorized().finish(),
-    };
-
-    println!("User ID from token: {}", claims.sub);
-    let api_key = "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".to_string();
+pub async fn generate(body: web::Json<ChatRequest>) -> impl Responder {
+    println!("Setting API key");
+    // let api_key = match env::var("OPENAI_API_KEY") {
+    //     Ok(key) => key,
+    //     Err(_) => return HttpResponse::InternalServerError().body("API key not configured."),
+    // };
+    let api_key = "ccc".to_string();
 
     let mut gpt_client = Gpt::new();
     gpt_client.set_api_key(&api_key);

@@ -37,24 +37,3 @@ nav ul li a.active {
   color: #ffffff;
   border: 1px solid #004085; /* Optional: add a border to the active link */
 }
-.header {
-  /* Your header styles */
-  position: relative;
-}
-
-.logout-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: transparent;
-  border: none;
-  color: #ff9494;
-  font-size: 14px;
-  padding: 8px 12px;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.logout-btn:hover {
-  color: #b3b3b3;
-}

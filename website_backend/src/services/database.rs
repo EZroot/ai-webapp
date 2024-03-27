@@ -1,10 +1,9 @@
 use actix_web::{web, HttpResponse};
 use diesel::{prelude::*, result::Error};
-use crate::models::diesel_user::{LoginRequest, NewUser, User};
+use crate::models::diesel_user::NewUser;
 use crate::schema::users::dsl::*;
 use diesel::r2d2::{ConnectionManager, Pool};
 use bcrypt;
-use super::webtoken;
 
 type DbPool = Pool<ConnectionManager<PgConnection>>;
 
@@ -15,35 +14,6 @@ pub fn get_connection_pool() -> DbPool {
         .test_on_check_out(true)
         .build(manager)
         .expect("Could not build connection pool")
-}
-
-// Implement the login function
-pub async fn login_user(
-    conn: &mut PgConnection,
-    login_request: LoginRequest, // Directly accept LoginRequest
-) -> Result<HttpResponse, Error> {
-    // Attempt to find the user by username
-    let user_result = users
-        .filter(username.eq(&login_request.username))
-        .first::<User>(conn);
-
-        match user_result {
-            Ok(user) => {
-                if bcrypt::verify(&login_request.password, &user.password_hash).unwrap_or(false) {
-                    // Generate JWT token upon successful authentication
-                    match webtoken::generate_token(&user.id.to_string()) {
-                        Ok(token) => {
-                            // Return the token in the response
-                            Ok(HttpResponse::Ok().json(serde_json::json!({ "token": token })))
-                        },
-                        Err(_) => Err(diesel::result::Error::NotFound),
-                    }
-                } else {
-                    Err(diesel::result::Error::NotFound)
-                }
-            },
-            Err(e) => Err(e),
-        }
 }
 
 pub fn create_user(conn: &mut PgConnection, new_user: &NewUser) -> Result<usize, Error> {

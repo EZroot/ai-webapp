@@ -89,23 +89,14 @@ function ImageGen() {
     event.preventDefault();
     if (!inputValue.trim()) return;
 
-      // Check if the token exists
-  const token = localStorage.getItem('token');
-  if (!token) {
-    console.error('No token found, please login.');
-    // Optionally, redirect to the login page or show an error message
-    return; // Stop the function if there's no token
-  }
-
     setIsLoading(true); // Update loading state to true when fetch starts
     // Here, you parse the user's input as Markdown to HTML
 
     fetch('/api/imagegen', {
       method: 'POST',
       headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
-    },
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ message: inputValue }),
     })
       .then(response => {

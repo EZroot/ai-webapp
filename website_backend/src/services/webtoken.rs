@@ -41,8 +41,13 @@ impl ResponseError for MyJwtError {
 
 pub fn generate_token(user_id: &str) -> Result<String, actix_web::Error> {
     // Load the secret key from an environment variable
-    let secret_key = "mmbgv8D4ix6kxikN/WAzNHMU2BJ3WaEaiNDmHuEokn9hRF6JKJuO+vWiWHpb6gEM
-    cgdPsd9qKroL3yKhd3m0IQ==";//env::var("SECRET_KEY").expect("SECRET_KEY must be set");
+    let secret_key = match env::var("WEB_TOKEN") {
+        Ok(val) => val,
+        Err(_) => {
+            eprintln!("WEB_TOKEN environment variable not set");
+            std::process::exit(1); // Exit with error code 1
+        }
+    };
     let expiration_time = chrono::Utc::now()
         .checked_add_signed(chrono::Duration::hours(24))
         .expect("valid timestamp")
@@ -58,9 +63,13 @@ pub fn generate_token(user_id: &str) -> Result<String, actix_web::Error> {
 }
 
 pub fn validate_token(token: &str) -> Result<Claims, jsonwebtoken::errors::Error> {
-    let secret_key = "mmbgv8D4ix6kxikN/WAzNHMU2BJ3WaEaiNDmHuEokn9hRF6JKJuO+vWiWHpb6gEM
-    cgdPsd9qKroL3yKhd3m0IQ==";// env::var("SECRET_KEY").expect("SECRET_KEY must be set");
-
+    let secret_key = match env::var("WEB_TOKEN") {
+        Ok(val) => val,
+        Err(_) => {
+            eprintln!("WEB_TOKEN environment variable not set");
+            std::process::exit(1); // Exit with error code 1
+        }
+    };
     decode::<Claims>(
         token,
         &DecodingKey::from_secret(secret_key.as_ref()),

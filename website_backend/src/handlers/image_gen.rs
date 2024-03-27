@@ -21,8 +21,13 @@ pub async fn generate(req: HttpRequest, body: web::Json<ChatRequest>) -> impl Re
     };
 
     println!("User ID from token: {}", claims.sub);
-    let api_key = "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".to_string();
-
+    let api_key = match env::var("API_KEY") {
+        Ok(val) => val,
+        Err(_) => {
+            eprintln!("API_KEY environment variable not set");
+            std::process::exit(1); // Exit with error code 1
+        }
+    };
     let mut gpt_client = Gpt::new();
     gpt_client.set_api_key(&api_key);
 

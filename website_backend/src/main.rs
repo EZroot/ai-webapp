@@ -28,7 +28,7 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .wrap(cors)
-            .wrap(middleware::request_logger::RequestLogger)
+            // .wrap(middleware::request_logger::RequestLogger)
             .service(
                 web::scope("/api")
                     .route("/greet", web::get().to(greeting::greet))

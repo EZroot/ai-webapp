@@ -1,0 +1,53 @@
+/* Home.module.css */
+
+.homeBodyWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh; /* Set minimum height to fill the viewport */
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.homeHeader {
+  text-align: center;
+  padding-bottom: 20px;
+  background-color: #f8f9fa; /* Light gray background */
+  border-radius: 10px; /* Rounded corners for a sleek look */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+}
+
+.homeHeader h1 {
+  color: #333; /* Dark gray */
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.homeHeader h2 {
+  color: #666; /* Medium gray */
+  font-size: 1.5rem;
+  font-weight: normal;
+}
+
+.homeMain {
+  flex: 1; /* Fill remaining vertical space */
+  max-width: 800px;
+  margin: 0 auto; /* Center content */
+  padding: 20px;
+}
+
+.homeSection {
+  margin-bottom: 40px; /* Increased margin for better separation */
+}
+
+.homeSection h2 {
+  color: #000; /* Black */
+  margin-bottom: 20px; /* Increased margin for better separation */
+}
+
+.homeSection p {
+  color: #555; /* Darker gray */
+  line-height: 1.6;
+}
+
+/* Add additional styles as needed */

@@ -8,6 +8,7 @@ import ImageGen from './ImageGen';
 import Register from './Register';
 import Login from './Login';
 import { useAuth } from './AuthProvider'; // Import useAuth hook
+import logo from './ailogo.png';
 
 function App() {
   const { user, setUser } = useAuth(); // Use the user state
@@ -38,7 +39,13 @@ function App() {
     <Router>
       <div>
         <nav>
-          <ul>
+        <div className="nav-header">
+        <li style={{display: 'flex', alignItems: 'center'}}>
+        <img src={logo} alt="logo" style={{ width: '30px', marginRight: '15px' }}/>
+        <div>
+    <span style={{color: 'white'}}>aioverlord.tech </span>
+</div>    </li>
+        <ul className="navLinks">
             <li><Link to="/">Home</Link></li>
             {user ? (
               <>
@@ -53,6 +60,7 @@ function App() {
               </>
             )}
           </ul>
+          </div> 
         </nav>
 
         <Routes>
@@ -72,8 +80,10 @@ function App() {
             </>
           )}
         </Routes>
+        
       </div>
     </Router>
+    
   );
 }
 

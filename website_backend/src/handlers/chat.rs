@@ -20,7 +20,7 @@ pub async fn chat(req: HttpRequest, body: web::Json<ChatRequest>) -> impl Respon
         None => return HttpResponse::Unauthorized().finish(),
     };
 
-    println!("User ID from token: {}", claims.sub);
+    println!("User ID from token: {}\nRequest: {}", claims.sub, &body.message);
     let api_key = match env::var("API_KEY") {
         Ok(val) => val,
         Err(_) => {

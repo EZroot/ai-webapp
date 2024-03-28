@@ -92,7 +92,7 @@ impl Gpt {
             });
 
             // Debug print serialized request body
-            println!("Request body: {}", request_body);
+            //println!("Request body: {}", request_body);
 
             let response = client.post("https://api.openai.com/v1/chat/completions")
             .header("Authorization", format!("Bearer {}", api_key))

@@ -30,7 +30,14 @@ function ImageGen() {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // Added loading state
   const messagesEndRef = useRef(null); // Create a ref
-
+  
+  useEffect(() => {
+    const savedMessages = localStorage.getItem('imageGenMessages');
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    }
+  }, []);
+  
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]); // Scroll to bottom every time messages update
@@ -89,6 +96,7 @@ function ImageGen() {
     event.preventDefault();
     if (!inputValue.trim()) return;
 
+    
       // Check if the token exists
   const token = localStorage.getItem('token');
   if (!token) {
@@ -110,7 +118,9 @@ function ImageGen() {
     })
       .then(response => {
         if (!response.ok) {
-          return response.text().then(text => { throw new Error(text || 'Server responded with an error') });
+          return response.text().then(text => {
+            throw new Error(text || 'Server responded with an error');
+          });
         }
         return response.json();
       })
@@ -120,16 +130,29 @@ function ImageGen() {
         const parsedUserInput = DOMPurify.sanitize(marked(inputValue));
 
         // Check if parsedMessage is a URL
-        if (data.message.startsWith('http') || data.message.startsWith('https')) {
+        if (typeof data.message === 'string' && (data.message.startsWith('http') || data.message.startsWith('https'))) {
           parsedMessage = `<img src="${data.message}" alt="Generated image"/>`;
+        } else {
+          parsedMessage = DOMPurify.sanitize(marked(data.message));
         }
-
-        setMessages([...messages,
-        { text: `<span class="unique-user-label"><b>USER</b> ${parsedUserInput}</span>`, isMarkdown: true },
-        { text: `<span class="unique-DALLE-label"><b>AI</b>\n</span> ${parsedMessage}`, isMarkdown: true }
-        ]);
+        const newMessages = [...messages,
+          { text: `<span class="unique-user-label"><b>USER</b>: ${parsedUserInput}</span>`, isMarkdown: true },
+          { text: `<span class="unique-DALLE-label"><b>AI</b>:\n</span>${parsedMessage}`, isMarkdown: true }
+        ];
+      
+        // Save new messages array to localStorage
+        localStorage.setItem('imageGenMessages', JSON.stringify(newMessages));
+      
+        setMessages(newMessages);
       })
-      .catch(error => console.error('Error:', error.message))
+      .catch(error => {
+        const errorMessage = `<span class="error-message"><b>Error</b>: ${error.message}</span>`;
+        const newMessages = [...messages, { text: errorMessage, isMarkdown: true }];
+      
+        console.error('Error:', error.message);
+        localStorage.setItem('imageGenMessages', JSON.stringify(newMessages));
+        setMessages(newMessages);
+      })
       .finally(() => setIsLoading(false)); // Reset loading state regardless of response outcome
 
     setInputValue('');
@@ -155,9 +178,16 @@ function ImageGen() {
         </ul>
       </div>
       <form onSubmit={handleSubmit} className="unique-chat-form">
-        <input type="text" value={inputValue} onChange={handleInputChange} placeholder="Type a message..." />
-        <button type="submit">Send</button>
-      </form>
+  <input 
+    type="text" 
+    value={inputValue} 
+    onChange={handleInputChange} 
+    placeholder="Generate an image of..." 
+    disabled={isLoading} 
+  />
+  <button type="submit" disabled={isLoading}>Send</button> 
+</form>
+
     </div>
   );
 }

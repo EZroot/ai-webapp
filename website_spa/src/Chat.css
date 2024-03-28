@@ -1,13 +1,16 @@
-/* Base styling for the chat interface */
+/* Base styling for the chat interface with updated colors */
 :root {
-    --background-primary: #ffffff; /* Primary background color */
-    --background-secondary: #f7f7f7; /* Secondary background for input area and messages */
-    --accent-color: #4a76a8; /* Accent color for buttons and links */
-    --text-primary: #333333; /* Primary text color */
-    --text-secondary: #555555; /* Secondary text color for less emphasis */
-    --border-color: #e0e0e0; /* Border color for inputs and messages box */
-    --shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
-  }
+  --background-primary: #ffffff; /* Primary background color */
+  --background-secondary: #f7f7f7; /* Secondary background for input area and messages */
+  --accent-color: #4a76a8; /* Accent color for buttons and links */
+  --text-primary: #333333; /* Primary text color */
+  --text-secondary: #555555; /* Secondary text color for less emphasis */
+  --border-color: #e0e0e0; /* Border color for inputs and messages box */
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+  --button-disabled-bg: #cccccc; /* Button disabled background color */
+  --button-disabled-text: #666666; /* Button disabled text color */
+}
+
 
   @keyframes blink {
     0%, 49% { opacity: 0; }
@@ -102,19 +105,34 @@
     flex-grow: 1;
     color: var(--text-primary);
   }
-  
-  button {
-    cursor: pointer;
-    background-color: var(--accent-color);
-    color: #ffffff;
-    border-color: var(--accent-color);
-  }
-  
-  button:hover {
-    background-color: darken(var(--accent-color), 10%);
-    border-color: darken(var(--accent-color), 10%);
-  }
-  
+
+/* Update button styles to match the theme in imagegen.css */
+button {
+  background-color: var(--accent-color); /* Use accent color for button background */
+  color: white; /* Text color for button */
+  border: none; /* Remove border */
+  padding: 10px 15px; /* Padding for button */
+  border-radius: 4px; /* Border radius for button */
+  cursor: pointer; /* Cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Adjust button:hover to use CSS custom property */
+button:hover {
+  background-color: darken(var(--accent-color), 10%); /* Darken button on hover */
+}
+
+/* Apply disabled styles using CSS custom properties */
+button:disabled {
+  background-color: var(--button-disabled-bg); /* Disabled background color */
+  color: var(--button-disabled-text); /* Disabled text color */
+  cursor: not-allowed; /* Cursor to indicate disabled state */
+}
+
+/* CSS custom property adjustments for hover effects */
+button:hover:not(:disabled) {
+  background-color: #4691c0; /* Darker shade for hover, only when not disabled */
+}
   .messages-box ul {
     list-style: none;
     padding: 0;

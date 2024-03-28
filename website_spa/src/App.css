@@ -1,60 +1,91 @@
-/* General styling for the navigation bar */
-nav {
-  background-color: #343a40; /* Dark background for contrast */
-  padding: 10px; /* Padding around the navigation */
+:root {
+  --bg-color: #343a40;
+  --text-color: #ffffff;
+  --hover-bg-color: #007bff;
+  --active-bg-color: #0056b3;
+  --active-border-color: #004085;
+  --font-family: 'Roboto', sans-serif;
+  --border-radius: 5px;
+  --transition-speed: 0.3s;
 }
 
-nav ul {
-  list-style: none; /* Remove default list styling */
+
+body {
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+nav {
+  background-color: var(--bg-color);
+  padding: 20px 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navLinks, nav ul {
+  list-style: none;
   padding: 0;
   margin: 0;
-  display: flex; /* Layout items in a row */
-  justify-content: center; /* Center items horizontally */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 nav ul li {
-  margin: 0 15px; /* Space between each link */
+  margin: 0 20px;
 }
 
 nav ul li a {
-  text-decoration: none; /* Remove underline from links */
-  color: #ffffff; /* Light text color for contrast */
-  font-size: 16px; /* Slightly larger font size for readability */
-  padding: 10px 15px; /* Padding for larger click area and visual appeal */
-  border-radius: 5px; /* Rounded corners for the links */
-  transition: background-color 0.3s; /* Smooth background transition on hover */
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 16px;
+  padding: 10px 15px;
+  border-radius: var(--border-radius);
+  transition: background-color var(--transition-speed);
 }
 
-/* Hover effect for links */
 nav ul li a:hover, nav ul li a:focus {
-  background-color: #007bff; /* Highlight color on hover/focus */
-  color: #ffffff; /* Keep text color consistent */
+  background-color: var(--hover-bg-color);
+  color: var(--text-color);
 }
 
-/* Active link styling */
 nav ul li a.active {
-  background-color: #0056b3; /* Darker shade for the active link */
-  color: #ffffff;
-  border: 1px solid #004085; /* Optional: add a border to the active link */
+  background-color: var(--active-bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--active-border-color);
 }
-.header {
-  /* Your header styles */
-  position: relative;
-}
+
 
 .logout-btn {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 10px;
+  right: 10px;
   background-color: transparent;
   border: none;
-  color: #ff9494;
+  color: var(--text-color);
   font-size: 14px;
   padding: 8px 12px;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color var(--transition-speed);
 }
 
 .logout-btn:hover {
   color: #b3b3b3;
+}
+
+
+.body-wrapper {
+  display: grid;
+  grid-template-columns: 1fr min(100%, 75rem) 1fr;
+}
+
+.body-content {
+  grid-column: 2;
 }

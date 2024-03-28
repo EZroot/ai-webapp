@@ -1,3 +1,5 @@
+use std::env;
+
 use actix_web::{web, HttpResponse};
 use diesel::{prelude::*, result::Error};
 use crate::models::diesel_user::{LoginRequest, NewUser, User};
@@ -9,7 +11,13 @@ use super::webtoken;
 type DbPool = Pool<ConnectionManager<PgConnection>>;
 
 pub fn get_connection_pool() -> DbPool {
-    let database_url = "postgres://postgres:password@localhost/my_database_name";
+    let database_url = match env::var("DB_URL") {
+        Ok(val) => val,
+        Err(_) => {
+            eprintln!("API_KEY environment variable not set");
+            std::process::exit(1); // Exit with error code 1
+        }
+    };
     let manager = ConnectionManager::<PgConnection>::new(database_url);
     Pool::builder()
         .test_on_check_out(true)
@@ -48,7 +56,7 @@ pub async fn login_user(
 
 pub fn create_user(conn: &mut PgConnection, new_user: &NewUser) -> Result<usize, Error> {
     let hashed_password = hash_password(&new_user.password_hash).unwrap();
-    println!("Password: {}\nInserting into database!", &hashed_password);
+    println!("Password: {}\nInserting into database! ({})", &hashed_password, &new_user.password_hash);
     diesel::insert_into(users)
         .values(NewUser {
             username: new_user.username.to_string(),

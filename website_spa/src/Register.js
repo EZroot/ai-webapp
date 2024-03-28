@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection after login
-import { useAuth } from './AuthProvider'; // Import useAuth hook
-import './Login.css'; // Adjust the path as necessary
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthProvider';
+import './Login.css';
 import DOMPurify from 'dompurify';
 
 function Register() {
@@ -13,17 +13,15 @@ function Register() {
   });
 
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-  const { setUser } = useAuth(); // Use setUser function from AuthProvider
+  const { setUser } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Sanitize user input to prevent XSS
     const sanitizedValue = DOMPurify.sanitize(value);
-  
     setFormData({ ...formData, [name]: sanitizedValue });
-    };
+  };
 
   const autoLogin = async () => {
     try {
@@ -40,15 +38,13 @@ function Register() {
       }
 
       const data = await loginResponse.json();
-      console.log('Auto-logged in successfully:', data);
       localStorage.setItem('token', data.token);
       localStorage.setItem('username', formData.username);
-
-      setUser(formData.username); // Update authentication state
-
-      navigate('/'); // Navigate to the home page or dashboard
+      setUser(formData.username);
+      navigate('/');
     } catch (error) {
       console.error('Auto-login error:', error);
+      setErrorMessage(error.message);
     }
   };
 
@@ -70,22 +66,30 @@ function Register() {
       });
       if (!response.ok) throw new Error('Failed to register');
 
-      setRegistrationSuccess(true); // Indicate registration success
+      setRegistrationSuccess(true);
       setTimeout(autoLogin, 3000);
     } catch (error) {
       console.error('Registration error:', error);
+      setErrorMessage(error.message);
+      setRegistrationSuccess(false); // Ensure to reset the success state in case of error
     }
   };
 
   return (
     <div className="login-container" id="loginContainer">
-      {registrationSuccess && (
+      <form id="loginForm" onSubmit={handleSubmit}>
+        <h2>Register</h2>
+        {/* Move success and error messages here, inside the form */}
+        {registrationSuccess && (
         <div className="success-message">
           Registration successful! Redirecting...
         </div>
       )}
-      <form id="loginForm" onSubmit={handleSubmit}>
-        <h2>Register</h2>
+      {errorMessage && !registrationSuccess && ( // Only display if registrationSuccess is false
+        <div className="error-message">
+          {errorMessage}
+        </div>
+      )}
         <label>
           Username:
           <input
@@ -111,7 +115,7 @@ function Register() {
           <input
             type="password"
             name="password_hash"
-            value={formData.password}
+            value={formData.password_hash}
             onChange={handleChange}
             required
           />
@@ -120,7 +124,6 @@ function Register() {
       </form>
     </div>
   );
-  
 }
 
 export default Register;

@@ -28,8 +28,15 @@ import './Chat.css';
 function Chat() {
   const [inputValue, setInputValue] = useState('');
   const [messages, setMessages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); // Added loading state
-  const messagesEndRef = useRef(null); // Create a ref
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    const savedMessages = localStorage.getItem('chatMessages');
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    }
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -116,10 +123,13 @@ function Chat() {
         // Sanitize the HTML content before rendering
         const parsedMessage = DOMPurify.sanitize(marked(data.message));
         const parsedUserInput = DOMPurify.sanitize(marked(inputValue));
-        setMessages([...messages,
-        { text: `<span class="user-label"><b>USER</b> ${parsedUserInput}</span>`, isMarkdown: true },
-        { text: `<span class="ai-label"><b>AI</b> ${parsedMessage}</span>`, isMarkdown: true }
-        ]);
+        const newMessages = [...messages,
+          { text: `<span class="user-label"><b>USER</b>: ${parsedUserInput}</span>`, isMarkdown: true },
+          { text: `<span class="ai-label"><b>AI</b>: ${parsedMessage}</span>`, isMarkdown: true }
+        ];
+
+        localStorage.setItem('chatMessages', JSON.stringify(newMessages));
+        setMessages(newMessages);
       })
       .catch(error => console.error('Error:', error.message))
       .finally(() => setIsLoading(false)); // Reset loading state regardless of response outcome

@@ -5,6 +5,7 @@ sudo apt-get install libpq-dev
 
 cargo install diesel_cli --no-default-features --features postgres
 sudo -u postgres createdb my_database_name
+#and create the table based on schema.rs
 
 sudo -u postgres psql
 \password postgres
